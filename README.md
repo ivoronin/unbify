@@ -11,3 +11,9 @@ Build requirements
 
  - ldns (http://www.nlnetlabs.nl/projects/ldns/)
  - unbound (http://unbound.net/)
+
+Limitations
+-----------
+
+ - Only getaddrinfo() is being wrapped (for now)
+ - IPv6 is not supported (yet)
