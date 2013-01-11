@@ -46,12 +46,12 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
             gai_errno = EAI_AGAIN;
         else if ( r->rcode == LDNS_RCODE_NXDOMAIN )
         /*@=unrecog@*/
-            gai_errno = EAI_ADDRFAMILY;
+            gai_errno = EAI_NONAME;
         else
             gai_errno = EAI_FAIL;
     }
     if ( r->havedata == 0 )
-        gai_errno = EAI_NODATA;
+        gai_errno = EAI_NONAME;
 
     if ( gai_errno != 0 ) {
         ub_resolve_free(r);
