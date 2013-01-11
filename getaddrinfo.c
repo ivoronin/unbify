@@ -13,7 +13,7 @@ typedef int (*gai_signature)(const char*, const char*, const struct addrinfo*, s
 int getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res) {
     gai_signature _getaddrinfo = NULL;
     struct ub_result *r;
-    struct addrinfo *ai = NULL, *ai_prev = NULL;
+    struct addrinfo *ai = NULL, *ai_prev = NULL, hintsn;
     char *dlerrstr;
     int gai_errno = 0, i;
 
@@ -60,9 +60,21 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
         /*@=mustfreefresh@*/
     }
 
+    if ( hints ) {
+        hintsn.ai_family = hints->ai_family;
+        hintsn.ai_socktype = hints->ai_socktype;
+        hintsn.ai_protocol = hints->ai_protocol;
+        hintsn.ai_flags = hints->ai_flags | AI_NUMERICHOST;
+    } else {
+        hintsn.ai_family = AF_UNSPEC;
+        hintsn.ai_socktype = 0;
+        hintsn.ai_protocol = 0;
+        hintsn.ai_flags =  AI_V4MAPPED | AI_ADDRCONFIG | AI_NUMERICHOST;
+    }
+
     for ( i = 0; r->data[i] != NULL; i++ ) {
         if ( (gai_errno = _getaddrinfo(inet_ntoa(*(struct in_addr*)(r->data[i])),
-            service, hints, &ai)) != 0 ) {
+            service, &hintsn, &ai)) != 0 ) {
             ub_resolve_free(r);
             /*@-mustfreefresh@*/
             return gai_errno;
