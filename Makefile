@@ -3,19 +3,20 @@ CFLAGS=-c -W -Wall -Wextra -Werror -pedantic -std=c99 -fPIC -g -rdynamic $(DEFIN
 LDFLAGS=-shared -lunbound
 SPLINTFLAGS=+posixlib -boolops
 
-OBJS=unbify.o getaddrinfo.o dlfunc.o
+SRCS=unbify.c getaddrinfo.c dlfunc.c
+OBJS=$(SRCS:.c=.o)
 
 all: libunbify.so
 
 %.o: %.c
-	$(CC) $(CFLAGS) $< -o $@ 
-	
+	$(CC) $(CFLAGS) $< -o $@
+
 libunbify.so: $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 .PHONY: splint install clean
 splint:
-	splint $(SPLINTFLAGS) $(DEFINES) unbify.c getaddrinfo.c dlfunc.c
+	splint $(SPLINTFLAGS) $(DEFINES) $(SRCS)
 
 clean:
 	rm -f *.o
