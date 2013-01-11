@@ -28,12 +28,12 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
     }
 
     /* Fallback */
-    if ( !node ||
-        hints->ai_family == AF_INET6 ||                     /* IPv6 */
+    if ( !node || (hints &&
+        (hints->ai_family == AF_INET6 ||                    /* IPv6 */
         hints->ai_flags & AI_NUMERICHOST ||                 /* Don't use name resolution. */
         hints->ai_flags & AI_IDN ||                         /* IDN */
         hints->ai_flags & AI_IDN_ALLOW_UNASSIGNED ||        /* IDN */
-        hints->ai_flags & AI_IDN_USE_STD3_ASCII_RULES )     /* IDN */
+        hints->ai_flags & AI_IDN_USE_STD3_ASCII_RULES )))   /* IDN */
         return _getaddrinfo(node, service, hints, res);
 
     /* Fallback: libunbound error */
