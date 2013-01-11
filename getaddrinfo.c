@@ -6,7 +6,6 @@
 #include <unbound.h>
 #include "dlfunc.h"
 #include "unbify.h"
-#include "debug.h"
 
 typedef int (*gai_signature)(const char*, const char*, const struct addrinfo*, struct addrinfo**);
 
