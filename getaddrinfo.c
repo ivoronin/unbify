@@ -16,6 +16,7 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
     struct addrinfo *ai = NULL, *ai_prev = NULL, hintsn;
     char *dlerrstr;
     int gai_errno = 0, i;
+    size_t l;
 
     if (!_getaddrinfo) {
         (void)dlerror();
@@ -81,9 +82,19 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
             /*@=mustfreefresh@*/
         }
 
-        if ( ai_prev == NULL )
+        if ( ai_prev == NULL ) {
             *res = ai_prev = ai;
-        else {
+            if ( hints && hints->ai_flags & AI_CANONNAME && ai ) {
+                if ( r->canonname ) {
+                    l = strlen(r->canonname);
+                    /*@-unrecog@*/
+                    ai->ai_canonname = strndup(r->canonname, r->canonname[l - 1] == '.' ? l - 1 : l);
+                } else {
+                    ai->ai_canonname = strdup(r->qname);
+                    /*@=unrecog@*/
+                }
+            }
+        } else {
             assert(ai_prev->ai_next == NULL);
             ai_prev->ai_next = ai;
             ai_prev = ai_prev->ai_next;
