@@ -13,18 +13,12 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
     gai_signature _getaddrinfo = NULL;
     struct ub_result *r;
     struct addrinfo *ai = NULL, *ai_prev = NULL, hintsn;
-    char *dlerrstr;
     int gai_errno = 0, i;
     size_t l;
 
     if (!_getaddrinfo) {
-        (void)dlerror();
         _getaddrinfo = (gai_signature)dlfunc(RTLD_NEXT, "getaddrinfo");
-        dlerrstr = dlerror();
-        if ( dlerrstr ) {
-            unbify_log_error(dlerrstr);
-            exit(EXIT_FAILURE);
-        }
+        assert(_getaddrinfo != NULL);
     }
 
     /* Fallback */
