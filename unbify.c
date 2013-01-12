@@ -6,7 +6,7 @@
 #include <assert.h>
 #include "unbify.h"
 
-void unbify_log_error(const char * errstr) {
+static void unbify_log_error(const char * errstr) {
     (void)fprintf(stderr, "%s: %s\n", "unbify", errstr);
 }
 
