@@ -3,7 +3,7 @@ CFLAGS=-c -W -Wall -Wextra -Werror -pedantic -std=c99 -fPIC -g -rdynamic $(DEFIN
 LDFLAGS=-shared -lunbound
 SPLINTFLAGS=+posixlib -boolops
 
-SRCS=unbify.c getaddrinfo.c dlfunc.c
+SRCS=unbify.c getaddrinfo.c dlfunc.c gethostbyname.c
 OBJS=$(SRCS:.c=.o)
 
 all: libunbify.so

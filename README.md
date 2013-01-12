@@ -15,5 +15,4 @@ Build requirements
 Limitations
 -----------
 
- - Only getaddrinfo() is being wrapped (for now)
  - IPv6 is not supported (yet)
