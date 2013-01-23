@@ -25,6 +25,9 @@ struct hostent *gethostbyname(const char *name) {
     if (!_gethostbyname)
         _gethostbyname = (ghbn_signature)dlfunc(RTLD_NEXT, "gethostbyname");
 
+    if ( is_ipv4_addr(name) )
+        return _gethostbyname(name);
+
     if ( !(r = unbify_resolve(name)) )
         return _gethostbyname(name);
 

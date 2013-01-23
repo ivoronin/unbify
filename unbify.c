@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <unbound.h>
 #ifndef S_SPLINT_S
 #include <ldns/ldns.h>
@@ -8,6 +9,16 @@
 
 static void unbify_log_error(const char * errstr) {
     (void)fprintf(stderr, "%s: %s\n", "unbify", errstr);
+}
+
+bool is_ipv4_addr(const char * hostname) {
+    int o[4];
+    /*
+    if ( sscanf(hostname, "%d.%d.%d.%d", &o[0], &o[1], &o[2], &o[3]) == 4 )
+        return 0;
+    else
+        return 1; */
+    return sscanf(hostname, "%d.%d.%d.%d", &o[0], &o[1], &o[2], &o[3]) == 4;
 }
 
 struct ub_result * unbify_resolve(const char *hostname) {

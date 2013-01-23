@@ -41,6 +41,18 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
         hints->ai_flags & AI_IDN_USE_STD3_ASCII_RULES )))   /* IDN */
         return _getaddrinfo(node, service, hints, res);
 
+    if ( hints ) {
+        hintsn.ai_family = hints->ai_family;
+        hintsn.ai_socktype = hints->ai_socktype;
+        hintsn.ai_protocol = hints->ai_protocol;
+        hintsn.ai_flags = hints->ai_flags;
+    }
+    hintsn.ai_flags |=  AI_NUMERICHOST;
+
+    /* IPv4 address */
+    if ( is_ipv4_addr(node) )
+	   return _getaddrinfo(node, service, &hintsn, res);
+
     /* Fallback: libunbound error */
     if ( !(r = unbify_resolve(node)) )
         return _getaddrinfo(node, service, hints, res);
@@ -64,14 +76,6 @@ int getaddrinfo(const char *node, const char *service, const struct addrinfo *hi
         return(gai_errno);
         /*@=mustfreefresh@*/
     }
-
-    if ( hints ) {
-        hintsn.ai_family = hints->ai_family;
-        hintsn.ai_socktype = hints->ai_socktype;
-        hintsn.ai_protocol = hints->ai_protocol;
-        hintsn.ai_flags = hints->ai_flags;
-    }
-    hintsn.ai_flags |=  AI_NUMERICHOST;
 
     for ( i = 0; r->data[i] != NULL; i++ ) {
         addr = inet_ntoa(*(struct in_addr*)(r->data[i]));
